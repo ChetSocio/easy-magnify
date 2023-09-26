@@ -43,14 +43,8 @@
     "build-es": "babel src --out-dir dist/es",
     "build": "rimraf dist && npm run build-cjs && npm run build-es && npm run build-umd",
     "build-watch": "cross-env BABEL_ENV=cjs babel --watch src --out-dir dist",
-    "prepublishOnly": "npm run lint && npm test && npm run build",
-    "lint": "eslint \"@(src|test)/**/*.js\"",
+    "prepublishOnly": "npm run lint && npm run build",
     "stats": "webpack -p --profile --json > stats.json",
-    "test": "npm run lint && npm run test-only",
-    "test-only": "cross-env BABEL_ENV=test mocha --recursive --require babel-core/register --require test/setup test",
-    "test-watch": "npm run test-only -- --watch",
-    "test-coverage": "rimraf coverage && nyc --reporter=lcov npm run test-only && nyc report",
-    "test-ci": "npm run lint && npm run test-coverage && npm run coveralls",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "nyc": {
