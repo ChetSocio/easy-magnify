@@ -1,16 +1,15 @@
+/* eslint-disable import/default */
 "use client"
-import detectIt from 'detect-it';
 import objectAssign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCursorPosition from 'react-cursor-position';
-
+import detectIt from 'detect-it';
 import RenderEnlargedImage from './RenderEnlargedImage';
 import NegativeSpaceLens from './lens/negative-space';
 import PositiveSpaceLens from './lens/positive-space';
 import DisplayUntilActive from './hint/DisplayUntilActive';
 import Hint from './hint/DefaultHint';
-
 import { getLensCursorOffset } from './lib/lens';
 import { getEnlargedImageContainerDimension } from './lib/dimensions';
 import {
