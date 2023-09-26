@@ -132,7 +132,7 @@ For more information on responsive images, please try these resources:
 
 ## Support
 
-Please [open an issue](https://github.com/ethanselzer/react-image-magnify/issues).
+Please [open an issue](https://github.com/ChetSocio/easy-magnify/issues).
 
 
 <p>The inspiration is taken from other package that has not been updated since last 3-4 years and many people seem to use it till now even after it conflicts with React 17 & 18.
