@@ -31,7 +31,7 @@ Coming soon* but works same like react-image-magnify package
 ## Installation
 
 ```sh
-npm install react-image-magnify
+npm install easy-magnify
 ```
 
 ## Usage
