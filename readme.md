@@ -35,8 +35,7 @@ npm install easy-magnify
 ```
 
 ## Usage
-If you are upgrading from v1x to v2x, please see the [release notes](https://github.com/ethanselzer/react-image-magnify/releases/tag/v2.0.0).
-
+Usage is pretty simple. Remember: using latest version of this package is always recommended
 
 ```JavaScript
 import ReactImageMagnify from 'easy-magnify';
