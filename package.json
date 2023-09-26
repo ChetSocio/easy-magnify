@@ -1,0 +1,25 @@
+{
+  "name": "easy-magnify",
+  "version": "1.0.0",
+  "description": "Everything you need for magnifying products images like amazon or other ecommerce stores",
+  "main": "dist/EasyImageMagnify.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com"
+  },
+  "keywords": [
+    "image-zoom",
+    "image",
+    "react",
+    "photo",
+    "lens",
+    "ecommerce",
+    "magnify",
+    "magnifier"
+  ],
+  "author": "Chet Raj Gautam <dommeyss@gmail.com>",
+  "license": "MIT"
+}
