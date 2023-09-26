@@ -24,7 +24,7 @@ Features Include:
 Author: <a href='https://chetrajgautam.com.np'>Chet Raj Gautam</a> <br>
 
 ## Demo
-Please visit the [react-image-magnify demo site](https://ethanselzer.github.io/react-image-magnify/#/)
+Coming soon* but works same like react-image-magnify package
 
 
 
