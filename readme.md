@@ -18,7 +18,7 @@ Features Include:
 * Basic react-slick carousel support
 
 ## Status
-[![npm](https://img.shields.io/npm/v/react-image-magnify.svg)](https://www.npmjs.com/package/easy-magnify)
+[![npm](https://img.shields.io/npm/v/easy-magnify.svg)](https://www.npmjs.com/package/easy-magnify)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 Author: <a href='https://chetrajgautam.com.np'>Chet Raj Gautam</a> <br>
