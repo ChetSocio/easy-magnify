@@ -5,3 +5,9 @@ dist/
 npm-debug.log
 node_modules/
 stats.json
+
+*storybook.log
+
+
+OldSrc
+sdemoSrc
