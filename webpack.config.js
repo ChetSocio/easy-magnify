@@ -1,11 +1,13 @@
 const path = require('path');
 
 module.exports = {
+    entry: './src/index.ts',
     mode: 'production',
-    entry: './src/index.ts', // Adjust entry point as needed
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js',
+        libraryTarget: 'commonjs2',
+        clean: true,
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -14,9 +16,18 @@ module.exports = {
         rules: [
             {
                 test: /\.(ts|tsx)$/,
-                exclude: /node_modules/,
                 use: 'ts-loader',
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.(js|jsx)$/,
+                use: 'babel-loader',
+                exclude: /node_modules/,
             },
         ],
+    },
+    externals: {
+        react: 'react',
+        'react-dom': 'react-dom',
     },
 };

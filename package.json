@@ -35,12 +35,13 @@
     "build-umd": "webpack --mode=production",
     "build-cjs": "cross-env BABEL_ENV=cjs babel src --out-dir dist",
     "build-es": "babel src --out-dir dist/es",
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc && webpack",
     "build-watch": "cross-env BABEL_ENV=cjs babel --watch src --out-dir dist",
     "stats": "webpack --profile --json > stats.json",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build -o docs"
+    "build-storybook": "storybook build -o docs",
+    "serve-storybook": "serve storybook-static"
   },
   "nyc": {
     "sourceMap": false,

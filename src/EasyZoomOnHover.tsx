@@ -1,47 +1,14 @@
-"use client"
-import React from 'react'
-import { useZoomImageHover } from './utils'
+import React from 'react';
+import { useZoomImageHover } from './utils';
 
-type EasyZoomOnHoverPropsType = {
-    mainImage: {
-        width?: number;
-        height?: number;
-        scale?: number
-        src: string;
-        alt?: string;
-    };
-    zoomedImage?: {
-        width?: number;
-        height?: number;
-        scale?: number
-        src: string;
-        alt?: string;
-    };
-}
-
-
-const EasyZoomOnHover = (props: EasyZoomOnHoverPropsType) => {
-
-
+const ZoomMyImageOnHover = () => {
     const { createZoomImage: createZoomImageHover } = useZoomImageHover();
 
-    const imageHoverContainerRef = React.useRef<HTMLDivElement>(null)
-    const zoomTargetRef = React.useRef<HTMLDivElement>(null)
-    const imgRef = React.useRef<HTMLImageElement>(null)
+    const imageHoverContainerRef = React.useRef<HTMLDivElement>(null);
+    const zoomTargetRef = React.useRef<HTMLDivElement>(null);
+    const imgRef = React.useRef<HTMLImageElement>(null);
     const [imageDimension, setImageDimensions] = React.useState({ width: 0, height: 0 });
-
-    React.useEffect(() => {
-
-        const imageContainer = imageHoverContainerRef.current as HTMLDivElement
-        const zoomTarget = zoomTargetRef.current as HTMLDivElement
-        createZoomImageHover(
-            imageContainer, {
-            zoomImageSource: props.zoomedImage?.src || props.mainImage.src,
-            customZoom: { width: props.zoomedImage?.width ?? 500, height: props.zoomedImage?.height ?? 500 },
-            zoomTarget,
-            scale: props.zoomedImage?.scale || 2,
-        })
-    }, [])
+    const [isImageLoaded, setIsImageLoaded] = React.useState(false);
 
     const handleImageLoad = () => {
         if (imgRef.current) {
@@ -49,42 +16,43 @@ const EasyZoomOnHover = (props: EasyZoomOnHoverPropsType) => {
                 width: imgRef.current.naturalWidth,
                 height: imgRef.current.naturalHeight,
             });
+            setIsImageLoaded(true);
         }
     };
-    const handleImageMouseEnter = () => {
-        if (zoomTargetRef.current) {
-            zoomTargetRef.current.style.border = "2px solid #6B7280";
-            zoomTargetRef.current.style.boxShadow = 'rgb(101 100 100 / 86%) 0px 4px 6px -1px, rgb(136 135 135 / 92%) 0px 2px 4px -1px';
+
+    React.useEffect(() => {
+        if (isImageLoaded && imageDimension.width > 0 && imageDimension.height > 0) {
+            const imageContainer = imageHoverContainerRef.current as HTMLDivElement;
+            const zoomTarget = zoomTargetRef.current as HTMLDivElement;
+            createZoomImageHover(
+                imageContainer, {
+                zoomImageSource: "https://m.media-amazon.com/images/I/61cXC1ZOlDL._AC_SL1500_.jpg",
+                customZoom: { width: 500, height: 500 },
+                zoomTarget,
+                scale: 3,
+            });
         }
-    };
-    const handleImageMouseLeave = () => {
-        if (zoomTargetRef.current) {
-            zoomTargetRef.current.style.border = "none";
-            zoomTargetRef.current.style.boxShadow = 'none';
-        }
-    };
+    }, [isImageLoaded, imageDimension, createZoomImageHover]);
+
     return (
-        <>
-            <div ref={imageHoverContainerRef}
-                onMouseEnter={handleImageMouseEnter}
-                onMouseLeave={handleImageMouseLeave}
-                style={{
-                    position: "relative", width: imageDimension?.width,
-                    height: imageDimension?.height,
-                    display: "flex", justifyItems: "start",
-                }
-                }
-            >
-                <img
-                    onLoad={handleImageLoad} ref={imgRef as React.RefObject<HTMLImageElement>}
-                    style={{ height: "auto", width: "auto", }}
-                    alt={props.mainImage.alt ?? "Product Main Image"} src={props.mainImage.src ?? ""} />
-                <div ref={zoomTargetRef} id="zoomTargetedRef" style={{
-                    position: "absolute", left: imageDimension?.width + 10 + "px",
-                }} ></div>
-            </div>
-        </>
-    )
+        <div ref={imageHoverContainerRef} style={{
+            position: "relative", width: imageDimension?.width,
+            height: imageDimension?.height,
+            display: "flex", justifyItems: "start",
+        }}>
+            <img
+                onLoad={handleImageLoad}
+                ref={imgRef as React.RefObject<HTMLImageElement>}
+                style={{ height: "auto", width: "auto" }}
+                alt="Small Pic"
+                src="https://m.media-amazon.com/images/I/61cXC1ZOlDL._AC_SX466_.jpg"
+            />
+            <div ref={zoomTargetRef} id="zoomTargetedRef" style={{
+                position: "absolute",
+                left: imageDimension?.width + 10 + "px",
+            }}></div>
+        </div>
+    );
 }
 
-export default EasyZoomOnHover
+export default ZoomMyImageOnHover;
