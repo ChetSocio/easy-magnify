@@ -1,40 +1,22 @@
-var path = require('path');
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const path = require('path');
 
 module.exports = {
-    entry: './src/ReactImageMagnify.js',
+    mode: 'production',
+    entry: './src/index.ts', // Adjust entry point as needed
     output: {
-        path: path.resolve(__dirname, './dist/umd'),
-        filename: 'ReactImageMagnify.js',
-        library: 'ReactImageMagnify',
-        libraryTarget: 'umd'
+        path: path.resolve(__dirname, 'dist'),
+        filename: '[name].js',
     },
-    externals: {
-        react: {
-            commonjs: 'react',
-            commonjs2: 'react',
-            amd: 'react',
-            umd: 'react',
-            root: 'React'
-        }
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.(ts|tsx)$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader'
-            }
-        ]
+                use: 'ts-loader',
+            },
+        ],
     },
-    plugins: [new BundleAnalyzerPlugin({
-        /**
-         * Can be `server`, `static` or `disabled`.
-         * In `server` mode analyzer will start HTTP server to show bundle report.
-         * In `static` mode single HTML file with bundle report will be generated.
-         * In `disabled` mode you can use this plugin to just generate Webpack Stats
-         * JSON file by setting `generateStatsFile` to true.
-         */
-        analyzerMode: 'disabled',
-    })]
 };

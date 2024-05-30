@@ -1,21 +1,8 @@
 {
   "presets": [
-    [
-      "es2015",
-      {
-        "modules": false
-      }
-    ],
-    "stage-2",
-    "react"
+    ["@babel/preset-env"],
+    "@babel/preset-react",
+    "@babel/preset-typescript"
   ],
-  "plugins": ["transform-class-properties"],
-  "env": {
-    "cjs": {
-      "plugins": ["transform-es2015-modules-commonjs"]
-    },
-    "test": {
-      "plugins": ["transform-es2015-modules-commonjs", "istanbul"]
-    }
-  }
+  "plugins": []
 }

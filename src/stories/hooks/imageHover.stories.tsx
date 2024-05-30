@@ -1,7 +1,7 @@
 
 import { StoryFn, Meta } from "@storybook/react";
 import * as React from "react";
-import EasyZoomOnHover from "../../index";
+import { EasyZoomOnHover } from "../../index";
 
 
 export default {

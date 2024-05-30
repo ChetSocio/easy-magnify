@@ -76,7 +76,6 @@ const EasyZoomOnHover = (props: EasyZoomOnHoverPropsType) => {
                 }
             >
                 <img
-
                     onLoad={handleImageLoad} ref={imgRef as React.RefObject<HTMLImageElement>}
                     style={{ height: "auto", width: "auto", }}
                     alt={props.mainImage.alt ?? "Product Main Image"} src={props.mainImage.src ?? ""} />

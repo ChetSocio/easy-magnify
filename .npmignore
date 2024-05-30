@@ -8,3 +8,6 @@ src
 .storybook
 webpack.config.js
 stories
+components
+test
+docs
