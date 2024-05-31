@@ -8,26 +8,22 @@ Designed for shopping site product detail.
 
 Features Include:
 
-* In-place and side-by-side image enlargement
-* Positive or negative space guide lens options
-* Interaction hint
-* Configurable enlarged image dimensions
-* Optional enlarged image external render
-* Hover intent
-* Long-press gesture
-* Fade transitions
-* Basic react-slick carousel support
+* Zoom on Hover
+* Zoom on Move
+* Responsive
+* Custom styling supported
+* Basic Carousel - Coming Soon
 
 ## Status
 
 [![npm](https://img.shields.io/npm/v/easy-magnify.svg)](https://www.npmjs.com/package/easy-magnify)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Author: <a href='https://batchnepal.com'>BatchNepal Consultancy & Chetraj Gautam</a> <br>
+Author: <a href='https://batchnepal.com'>BatchNepal Consultancy</a> <br>
 
 ## Demo & Usage
 
-Docs is coming soon but demo and usage can be seen on storybook live at: .  
+You can view demo and complete docs and api at : [Easy-Magnify Docs](https://easy-magnify.batchnepal.com)
 
 ## Installation
 
@@ -69,13 +65,6 @@ import { EasyZoomOnMove } from 'easy-magnify';
         }}
     />
 ```
-
-## Required Props
-
-| Prop                        | Type   | Default | Description                                                |
-|-----------------------------|--------|---------|--------------------------------|
-| mainImage                  | Object | N/A     | Small image information. See [Main Image](#small-image) below.|
-| zoomedImage                  | Object | N/A     | Large image information. See [Large Image](#large-image) below.|
 
 ### Main Image Api for EasyZoomOnHover
 

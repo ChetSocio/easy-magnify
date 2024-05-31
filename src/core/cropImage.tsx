@@ -1,4 +1,4 @@
-type CropImageArg = {
+export type CropImageArg = {
     currentZoom: number
     image: HTMLImageElement
     positionX: number
@@ -6,7 +6,7 @@ type CropImageArg = {
     rotation?: number
 }
 
-export const cropImage = async ({ image, positionX, positionY, currentZoom, rotation = 0 }: CropImageArg) => {
+const cropImage = async ({ image, positionX, positionY, currentZoom, rotation = 0 }: CropImageArg) => {
     const canvas = document.createElement("canvas")
     const scale = image.naturalWidth / (image.clientWidth * currentZoom)
     const normalizedRotation = rotation % 360
@@ -58,3 +58,4 @@ export const cropImage = async ({ image, positionX, positionY, currentZoom, rota
 
     return rotatedCanvas.toDataURL()
 }
+export default cropImage;

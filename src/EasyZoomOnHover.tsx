@@ -1,7 +1,27 @@
 import React from 'react';
 import { useZoomImageHover } from './utils';
 
-const ZoomMyImageOnHover = () => {
+export type EasyZoomOnHoverProps = {
+    mainImage: {
+        width?: number;
+        height?: number;
+        src: string;
+        alt?: string;
+    }
+    zoomImage: {
+        src: string;
+        alt?: string;
+    }
+    zoomContainerWidth?: number;
+    zoomContainerHeight?: number;
+    zoomLensScale?: number;
+}
+
+
+const EasyZoomOnHover = (props: EasyZoomOnHoverProps) => {
+
+    const { mainImage, zoomImage } = props;
+
     const { createZoomImage: createZoomImageHover } = useZoomImageHover();
 
     const imageHoverContainerRef = React.useRef<HTMLDivElement>(null);
@@ -26,33 +46,34 @@ const ZoomMyImageOnHover = () => {
             const zoomTarget = zoomTargetRef.current as HTMLDivElement;
             createZoomImageHover(
                 imageContainer, {
-                zoomImageSource: "https://m.media-amazon.com/images/I/61cXC1ZOlDL._AC_SL1500_.jpg",
-                customZoom: { width: 500, height: 500 },
+                zoomImageSource: zoomImage.src ?? mainImage.src,
+                customZoom: { width: props.zoomContainerWidth ?? 500, height: props.zoomContainerHeight ?? 500 },
                 zoomTarget,
-                scale: 3,
+                scale: props.zoomLensScale ?? 3,
             });
         }
     }, [isImageLoaded, imageDimension, createZoomImageHover]);
 
     return (
-        <div ref={imageHoverContainerRef} style={{
-            position: "relative", width: imageDimension?.width,
-            height: imageDimension?.height,
+        <div ref={imageHoverContainerRef} className='EasyZoomImageHoverMainContainer' style={{
+            position: "relative", minWidth: props.mainImage.width ?? imageDimension?.width,
+            height: props.mainImage.height ?? imageDimension?.height,
             display: "flex", justifyItems: "start",
         }}>
-            <img
+            <img className='EasyZoomHoverSmallImage'
                 onLoad={handleImageLoad}
-                ref={imgRef as React.RefObject<HTMLImageElement>}
+                ref={imgRef}
                 style={{ height: "auto", width: "auto" }}
-                alt="Small Pic"
-                src="https://m.media-amazon.com/images/I/61cXC1ZOlDL._AC_SX466_.jpg"
+                alt={mainImage.alt ?? "Small Pic"}
+                src={mainImage.src}
             />
-            <div ref={zoomTargetRef} id="zoomTargetedRef" style={{
-                position: "absolute",
-                left: imageDimension?.width + 10 + "px",
-            }}></div>
+            <div ref={zoomTargetRef} className="EasyZoomImageZoomHoverContainer" id="zoomTargetedRef"
+                style={{
+                    position: "absolute",
+                    left: imageDimension?.width + 10 + "px",
+                }}></div>
         </div>
     );
 }
 
-export default ZoomMyImageOnHover;
+export default EasyZoomOnHover;

@@ -1,0 +1,109 @@
+import { Meta } from "@storybook/blocks";
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+
+<Meta title="Introduction - Easy-Magnify" />
+
+<center> 
+<img src="https://cdn.batchnepal.com/media/images/topics/easy-magnify-logo_SWlggLw.png" width={"80px"} 
+style={{borderRadius : "10px"}}
+ />
+</center>
+<div className="sb-container" style={{marginTop: "20px"}}>
+  <div className='sb-section-title'>
+    # Easy-Magnify - A simple image magnifier for React applications
+    <p className="intro text-green-500">
+        Easy-Magnify is a simple image magnifier for React applications developed by <a href="https://batchnepal.com?utm_source=easy_magnify_storybook"
+        target="_blank"> BatchNepal Consultancy </a> . You can create a magnifying effect just like amazon and flipkart.
+        It is ready for production and tested with frameworks like Vite, CRA and Next.js 
+    </p>
+  </div>
+</div>
+
+<div className="gettingStatedDiv text-blue-500">
+## Getting Started
+<p >
+Getting Started with Easy-Magnify is easy! You can install it via npm using:
+```javascript
+npm install easy-magnify
+```
+</p>
+</div>
+
+<div style={{marginTop: "20px"}}>
+## Sponsors
+<p>
+This project is sponsored by <a href="https://batchnepal.com?utm_source=easy_magnify_storybook" target="_blank">BatchNepal Consultancy</a>
+</p>
+<div style={{display: "flex" , alignItems: "center"}}>
+<a title="BatchNepal - Web Development and Global IT Services" href="https://batchnepal.com?utm_source=easy_magnify_storybook" >
+<img src="https://batchnepal.com/assets/images/batchnepal-logo.png" width={80} />
+</a>
+<div style={{marginLeft: "30px"}}>
+<a title="Solerac - Advertisement & Monetization Platform" href="https://solerac.com?utm_source=easy_magnify_storybook" >
+<img src="https://cdn.batchnepal.com/media/images/topics/solerac-icon-2.png" width={80} />
+</a>
+</div>
+
+</div>
+</div>
+
+<div className="gettingStatedDiv">
+## Usage
+<p className="text-blue-500">
+Components can be easily imported and used in your project. Here is an example of how you can use it in your
+ project. Note: this is demo usage, for complete usage and the apis of components, please refer to their respective storybooks.
+```bash
+
+import { EasyZoomOnHover } from "easy-magnify";
+import { EasyZoomOnMove } from "easy-magnify";
+
+<EasyZoomOnHover
+      mainImage={{
+          src: "https://m.media-amazon.com/images/I/71sgEIlSvfL._AC_SX466_.jpg",
+          alt: "My Product"
+      }}
+      zoomImage={{
+          src: "https://m.media-amazon.com/images/I/71sgEIlSvfL._AC_SX1500_.jpg",
+          alt: "My Product Zoom"
+      }}
+  />
+
+<EasyZoomOnMove image={{
+    src: "https://m.media-amazon.com/images/I/61vThyaOrHL._AC_SX466_.jpg",
+    alt: "My Product",
+    width: 466,
+    height: 466
+}}
+    zoomedImage={{
+        src: "https://m.media-amazon.com/images/I/61vThyaOrHL._AC_SX1500_.jpg",
+        alt: "My Product",
+    }}
+
+/>
+```
+</p>
+</div>
+
+
+<style>
+{`
+
+* {
+font-family: 'Lato' ,'Inter', sans-serif;
+}
+
+.spacingDiv {
+    margin-top: 20px;
+    background-color: #f3f4f6;
+    height: 30px;
+}
+.gettingStatedDiv {
+    margin-top: 20px;
+    background-color: #f3f4f6;
+    padding: 20px;
+}
+
+`}
+</style>

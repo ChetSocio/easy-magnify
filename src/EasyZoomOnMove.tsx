@@ -29,15 +29,16 @@ const EasyZoomOnMove = (props: EasyZoomOnMovePropsType) => {
     const imgRef = React.useRef<HTMLImageElement>(null)
     const [imageDimension, setImageDimensions] = React.useState<ImageDimensionType | null>(null);
 
+
     React.useEffect(() => {
-
-        const imageContainer = imageMoveContainerRef.current as HTMLDivElement
-        createZoomImageMove(imageContainer, {
-            zoomImageSource: props.zoomedImage.src,
-            zoomImageProps: { alt: props.zoomedImage.alt },
-
-        })
-    }, [])
+        const imageContainer = imageMoveContainerRef.current as HTMLDivElement;
+        if (imageContainer) {
+            createZoomImageMove(imageContainer, {
+                zoomImageSource: props.zoomedImage.src,
+                zoomImageProps: { alt: props.zoomedImage.alt },
+            });
+        }
+    }, [props.zoomedImage.src, props.zoomedImage.alt, createZoomImageMove]);
 
     const handleImageLoad = () => {
         if (imgRef.current) {
@@ -56,8 +57,8 @@ const EasyZoomOnMove = (props: EasyZoomOnMovePropsType) => {
                     minWidth: props.image.width ?? imageDimension?.width, overflow: "hidden",
                     cursor: "crosshair",
                 }}
-                className="imageMoveContainer ">
-                <img
+                className="EasyImageZoomOnMoveContainer ">
+                <img className='EasyImageZoomOnMoveImage'
                     onLoad={handleImageLoad} ref={imgRef as React.RefObject<HTMLImageElement>}
                     style={{ width: "full", height: "full" }}
                     alt={props.image.alt ?? "Large Pic"} src={props.image.src} />

@@ -1,7 +1,13 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
+const path = require('path')
 
 const config: StorybookConfig = {
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+
+  stories: [
+    '../src/stories/intro.mdx',
+    "../src/**/*.mdx",
+    "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
+  ],
   addons: [
     "@storybook/addon-webpack5-compiler-swc",
     "@storybook/addon-onboarding",
@@ -11,6 +17,7 @@ const config: StorybookConfig = {
     "@storybook/addon-interactions",
     '@storybook/addon-styling-webpack',
     'storybook-dark-mode',
+    '@storybook/addon-docs',
   ],
   framework: {
     name: "@storybook/react-webpack5",
