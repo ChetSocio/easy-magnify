@@ -3,7 +3,7 @@ import React from 'react'
 import { useZoomImageMove } from './utils';
 
 type EasyZoomOnMovePropsType = {
-    image: {
+    mainImage: {
         width?: number;
         height?: number;
         src: string;
@@ -53,15 +53,15 @@ const EasyZoomOnMove = (props: EasyZoomOnMovePropsType) => {
         <>
             <div ref={imageMoveContainerRef}
                 style={{
-                    position: "relative", height: props.image.height ?? imageDimension?.height ?? "auto",
-                    minWidth: props.image.width ?? imageDimension?.width, overflow: "hidden",
+                    position: "relative", height: props.mainImage.height ?? imageDimension?.height ?? "auto",
+                    minWidth: props.mainImage.width ?? imageDimension?.width, overflow: "hidden",
                     cursor: "crosshair",
                 }}
                 className="EasyImageZoomOnMoveContainer ">
                 <img className='EasyImageZoomOnMoveImage'
                     onLoad={handleImageLoad} ref={imgRef as React.RefObject<HTMLImageElement>}
                     style={{ width: "full", height: "full" }}
-                    alt={props.image.alt ?? "Large Pic"} src={props.image.src} />
+                    alt={props.mainImage.alt ?? "Large Pic"} src={props.mainImage.src} />
             </div>
 
         </>

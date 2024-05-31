@@ -8,7 +8,7 @@ export type EasyZoomOnHoverProps = {
         src: string;
         alt?: string;
     }
-    zoomImage: {
+    zoomedImage: {
         src: string;
         alt?: string;
     }
@@ -20,7 +20,7 @@ export type EasyZoomOnHoverProps = {
 
 const EasyZoomOnHover = (props: EasyZoomOnHoverProps) => {
 
-    const { mainImage, zoomImage } = props;
+    const { mainImage, zoomedImage } = props;
 
     const { createZoomImage: createZoomImageHover } = useZoomImageHover();
 
@@ -46,7 +46,7 @@ const EasyZoomOnHover = (props: EasyZoomOnHoverProps) => {
             const zoomTarget = zoomTargetRef.current as HTMLDivElement;
             createZoomImageHover(
                 imageContainer, {
-                zoomImageSource: zoomImage.src ?? mainImage.src,
+                zoomImageSource: zoomedImage.src ?? mainImage.src,
                 customZoom: { width: props.zoomContainerWidth ?? 500, height: props.zoomContainerHeight ?? 500 },
                 zoomTarget,
                 scale: props.zoomLensScale ?? 3,
@@ -56,7 +56,7 @@ const EasyZoomOnHover = (props: EasyZoomOnHoverProps) => {
 
     return (
         <div ref={imageHoverContainerRef} className='EasyZoomImageHoverMainContainer' style={{
-            position: "relative", minWidth: props.mainImage.width ?? imageDimension?.width,
+            position: "relative", width: props.mainImage.width ?? imageDimension?.width,
             height: props.mainImage.height ?? imageDimension?.height,
             display: "flex", justifyItems: "start",
         }}>
