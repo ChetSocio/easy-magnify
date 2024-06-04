@@ -167,7 +167,7 @@ export function createZoomImageHover(container: HTMLElement, options: ZoomImageH
 
     // Set up styles if custom zoom available
     if (customZoom) {
-      zoomedImgWrapper.style.width = customZoom.width + "px"
+      zoomedImgWrapper.style.maxWidth = customZoom.width + "px"
       zoomedImgWrapper.style.height = customZoom.height + "px"
     } else {
       // Else default zoom to source image size

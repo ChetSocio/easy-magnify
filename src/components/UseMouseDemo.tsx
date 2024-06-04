@@ -1,10 +1,6 @@
 "use client"
 import React from 'react'
 import { useMouse } from '../hooks';
-import { createTheme } from '@mantine/core';
-
-export const theme: any = createTheme({
-});
 
 
 const UseMouseDemo = () => {

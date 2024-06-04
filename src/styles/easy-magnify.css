@@ -1,0 +1,29 @@
+.EasyImageZoomOnMoveContainer {
+  margin-top: 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  border: 2px rgb(231, 230, 230) solid;
+  padding: 2px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.EasyImageZoomOnMoveContainer img {
+  border-radius: 4px;
+}
+.easyPulseSkeleton {
+  border-radius: 2px;
+  position: relative;
+  mask-image: -webkit-radial-gradient(center, white, black);
+  overflow: hidden;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

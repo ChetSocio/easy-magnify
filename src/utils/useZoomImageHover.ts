@@ -1,3 +1,4 @@
+"use client"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ZoomImageHoverState, createZoomImageHover as _createZoomImageHover } from "../core/createZoomImageHover"
 

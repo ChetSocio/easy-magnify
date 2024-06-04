@@ -1,4 +1,5 @@
 "use client"
+import './styles/easy-magnify.css'
 export { default as EasyZoomOnHover } from './EasyZoomOnHover';
 export * from './EasyZoomOnHover';
 

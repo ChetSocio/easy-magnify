@@ -1,4 +1,3 @@
-
 import { StoryFn, Meta } from "@storybook/react";
 import * as React from "react";
 import EasyZoomOnHover from "../../EasyZoomOnHover";
@@ -7,32 +6,23 @@ export default {
     title: "Components/ZoomOnHover",
     component: EasyZoomOnHover,
     args: {
-
     }
 } as Meta<typeof EasyZoomOnHover>;
 
 
 const Template: StoryFn<typeof EasyZoomOnHover> = (args) => <div>
-    <div style={{ display: "flex" }}>
-        <EasyZoomOnHover
+    <div >
+        <EasyZoomOnHover {...args}
             mainImage={{
                 src: "https://m.media-amazon.com/images/I/71sgEIlSvfL._AC_SX466_.jpg",
                 alt: "My Product",
-
             }}
             zoomImage={{
                 src: "https://m.media-amazon.com/images/I/71sgEIlSvfL._AC_SX1500_.jpg",
                 alt: "My Product Zoom"
             }}
         />
-        <div style={{ marginLeft: "20px" }}>
-            <h1 className="text-2xl font-semibold ">Logitech G305 LIGHTSPEED Wireless Gaming Mouse, Hero 12K Sensor, 12,000 DPI, Lightweight, - Black
-            </h1>
-            <p>Price: $49.99</p>
-            <p>Brand: Logitech</p>
-            <p>Color: Black</p>
-            <p>Connectivity Technology: Wireless</p>
-        </div>
+
 
     </div>
     <div style={{ marginTop: "30px" }}>
@@ -104,6 +94,25 @@ const Template: StoryFn<typeof EasyZoomOnHover> = (args) => <div>
                     <td style={{ border: "1px solid gray" }}>Zoom Image that appears when user hovers on main image.</td>
                 </tr>
                 <tr>
+                    <td style={{ border: "1px solid gray", padding: "4px" }}>loadingIndicator</td>
+                    <td style={{ border: "1px solid gray", padding: "4px" }}>React.ReactNode</td>
+                    <td style={{ border: "1px solid gray", padding: "4px" }}> <pre
+                        style={{ backgroundColor: "#f1f5f9", padding: "8px" }}>{"<EasySkeleton />"}</pre> </td>
+                    <td style={{ border: "1px solid gray" }}>Loading Widget before component loads properly.</td>
+                </tr>
+                <tr>
+                    <td style={{ border: "1px solid gray", padding: "4px" }}>distance</td>
+                    <td style={{ border: "1px solid gray", padding: "4px" }}>number</td>
+                    <td style={{ border: "1px solid gray", padding: "4px" }}>10</td>
+                    <td style={{ border: "1px solid gray" }}>distance between main image and zoomed Image.</td>
+                </tr>
+                <tr>
+                    <td style={{ border: "1px solid gray", padding: "4px" }}>delayTimer</td>
+                    <td style={{ border: "1px solid gray", padding: "4px" }}>number</td>
+                    <td style={{ border: "1px solid gray", padding: "4px" }}>1600</td>
+                    <td style={{ border: "1px solid gray" }}>How long loading indicator is shown</td>
+                </tr>
+                <tr>
                     <td style={{ border: "1px solid gray", padding: "4px" }}>zoomContainerWidth</td>
                     <td style={{ border: "1px solid gray", padding: "4px" }}>number</td>
                     <td style={{ border: "1px solid gray", padding: "4px" }}>500</td>
@@ -124,6 +133,9 @@ const Template: StoryFn<typeof EasyZoomOnHover> = (args) => <div>
             </tbody>
         </table>
     </div>
+    <br />
+    <br />
+    <br />
 </div>
     ;
 

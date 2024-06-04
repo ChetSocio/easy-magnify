@@ -1,0 +1,1 @@
+export { default as EasySkeleton } from './Skeleton';
