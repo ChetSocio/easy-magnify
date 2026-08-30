@@ -16,19 +16,32 @@ function preventDefaultForScrollKeys(event: KeyboardEvent) {
     }
 }
 
-let controller: AbortController | undefined
+let scrollController: AbortController | undefined
+let scrollLockCount = 0
 
+/**
+ * Prevent page scrolling. Calls are reference counted so multiple zoom instances
+ * can safely hold a scroll lock at the same time.
+ */
 export function disableScroll() {
-    controller = new AbortController()
-    const { signal } = controller
+    scrollLockCount += 1
+    if (scrollController) return
+
+    scrollController = new AbortController()
+    const { signal } = scrollController
     window.addEventListener("DOMMouseScroll", preventDefault, { signal })
     window.addEventListener("wheel", preventDefault, { passive: false, signal })
     window.addEventListener("touchmove", preventDefault, { passive: false, signal })
     window.addEventListener("keydown", preventDefaultForScrollKeys, { signal })
 }
 
+/** Release one page-scroll lock previously acquired with disableScroll. */
 export function enableScroll() {
-    controller?.abort()
+    if (scrollLockCount > 0) scrollLockCount -= 1
+    if (scrollLockCount > 0) return
+
+    scrollController?.abort()
+    scrollController = undefined
 }
 
 export function getSourceImage(container: HTMLElement) {
@@ -56,8 +69,6 @@ export function getPointersCenter(first: PointerPosition, second: PointerPositio
     }
 }
 
-// Given the previous and current positions of two touch inputs, compute the zoom
-// factor and the origin of the zoom gesture.
 export function computeZoomGesture(prev: [PointerPosition, PointerPosition], curr: [PointerPosition, PointerPosition]) {
     const prevCenter = getPointersCenter(prev[0], prev[1])
     const currCenter = getPointersCenter(curr[0], curr[1])
@@ -67,7 +78,6 @@ export function computeZoomGesture(prev: [PointerPosition, PointerPosition], cur
     const currDistance = Math.hypot(curr[0].x - curr[1].x, curr[0].y - curr[1].y)
     let scale = currDistance / prevDistance
 
-    // avoid division by zero
     const eps = 0.00001
     if (Math.abs(scale - 1) < eps) {
         scale = 1 + eps
@@ -76,8 +86,6 @@ export function computeZoomGesture(prev: [PointerPosition, PointerPosition], cur
     return {
         scale,
         center: {
-            // We shift the zoom center away such that the translation part of the gesture
-            // is also captured by the zoom operation.
             x: prevCenter.x + centerDist.x / (1 - scale),
             y: prevCenter.y + centerDist.y / (1 - scale),
         },
@@ -93,12 +101,7 @@ export function makeMaybeCallFunction<T>(predicateFn: () => boolean, fn: (arg: T
 }
 
 export const scaleLinear =
-    ({
-        domainStart,
-        domainStop,
-        rangeStart,
-        rangeStop,
-    }: {
+    ({ domainStart, domainStop, rangeStart, rangeStop }: {
         domainStart: number
         domainStop: number
         rangeStart: number

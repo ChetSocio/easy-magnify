@@ -8,7 +8,10 @@ export default defineConfig({
     minify: false,
     splitting: false,
     dts: true,
-    treeshake: true,
+    treeshake: false,
+    banner: {
+        js: '"use client";',
+    },
     entry: [
         "./src/index.ts",
         "!src/stories/**", "!src/**/**/**.md", "!src/components/readme.md",

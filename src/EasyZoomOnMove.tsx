@@ -1,98 +1,177 @@
 "use client"
-import React from 'react'
-import { useZoomImageMove } from './utils';
-import { EasySkeleton } from './hooks/useSkeleton';
+import React from "react"
+import { useZoomImageMove } from "./utils"
+import { EasySkeleton } from "./hooks/useSkeleton"
 
-type EasyZoomOnMovePropsType = {
-    /**
-     * Delay timer in ms for knowingly applying delay on loader and enhancing user experience
-     * @default 1600
-    */
-    delayTimer?: number;
-
-    loadingIndicator?: React.ReactNode;
+export type EasyZoomOnMoveProps = {
+    /** Delay before revealing the loaded image, in milliseconds. @default 1600 */
+    delayTimer?: number
+    loadingIndicator?: React.ReactNode
     mainImage: {
-        width?: number;
-        height?: number;
-        src: string;
-        alt?: string;
-    };
+        width?: number
+        height?: number
+        src: string
+        alt?: string
+    }
     zoomImage: {
-        src: string;
-        alt?: string;
-    };
-
+        src: string
+        alt?: string
+    }
+    /** Magnification factor. @default 4 */
+    zoomFactor?: number
+    /** @deprecated Use zoomFactor. Retained for compatibility with lens-scale requests. */
+    zoomLensScale?: number
+    /**
+     * When true, page scrolling remains enabled while the pointer is over the image.
+     * @default true
+     */
+    disableScrollLock?: boolean
+    className?: string
+    style?: React.CSSProperties
+    imageClassName?: string
+    imageStyle?: React.CSSProperties
+    zoomImageClassName?: string
 }
 
+/** @deprecated Use EasyZoomOnMoveProps. */
+export type EasyZoomOnMovePropsType = EasyZoomOnMoveProps
+
 type ImageDimensionType = {
-    width: number;
+    width: number
     height: number
 }
 
+function joinClassNames(...classNames: Array<string | undefined>) {
+    return classNames.filter(Boolean).join(" ")
+}
 
-const EasyZoomOnMove = (props: EasyZoomOnMovePropsType) => {
+const EasyZoomOnMove = React.forwardRef<HTMLDivElement, EasyZoomOnMoveProps>(function EasyZoomOnMove(props, forwardedRef) {
+    const {
+        mainImage,
+        zoomImage,
+        loadingIndicator,
+        delayTimer = 1600,
+        zoomFactor,
+        zoomLensScale,
+        disableScrollLock = true,
+        className,
+        style,
+        imageClassName,
+        imageStyle,
+        zoomImageClassName,
+    } = props
 
-    const { mainImage, zoomImage, loadingIndicator, delayTimer } = props;
-    const [isImageLoaded, setIsImageLoaded] = React.useState(false);
-    const { createZoomImage: createZoomImageMove } = useZoomImageMove();
+    const [loadedSrc, setLoadedSrc] = React.useState<string | null>(null)
+    const isImageLoaded = loadedSrc === mainImage.src
+    const [imageDimension, setImageDimensions] = React.useState<ImageDimensionType>({ height: 0, width: 0 })
+    const { createZoomImage: createZoomImageMove } = useZoomImageMove()
     const imageMoveContainerRef = React.useRef<HTMLDivElement>(null)
     const imgRef = React.useRef<HTMLImageElement>(null)
-    const [imageDimension, setImageDimensions] = React.useState<ImageDimensionType>({ height: 0, width: 0 });
+    const revealTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
-    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    React.useImperativeHandle(forwardedRef, () => imageMoveContainerRef.current as HTMLDivElement, [])
 
+    const clearRevealTimer = React.useCallback(() => {
+        if (revealTimerRef.current) {
+            clearTimeout(revealTimerRef.current)
+            revealTimerRef.current = null
+        }
+    }, [])
+
+    React.useEffect(() => clearRevealTimer, [clearRevealTimer])
 
     React.useEffect(() => {
-        if (imageDimension.width > 0 && imageDimension.height > 0) {
+        const imageContainer = imageMoveContainerRef.current
+        if (!isImageLoaded || !imageContainer) return
 
+        createZoomImageMove(imageContainer, {
+            zoomFactor: zoomFactor ?? zoomLensScale ?? 4,
+            zoomImageSource: zoomImage.src,
+            disableScrollLock,
+            zoomImageProps: {
+                alt: zoomImage.alt,
+                className: zoomImageClassName,
+            },
+        })
+    }, [
+        createZoomImageMove,
+        disableScrollLock,
+        isImageLoaded,
+        zoomFactor,
+        zoomImage.alt,
+        zoomImage.src,
+        zoomImageClassName,
+        zoomLensScale,
+    ])
 
-        }
-        const imageContainer = imageMoveContainerRef.current as HTMLDivElement;
-        if (imageContainer) {
-            createZoomImageMove(imageContainer, {
-                zoomImageSource: zoomImage.src,
-                zoomImageProps: { alt: zoomImage.alt },
-            });
-        }
-    }, [zoomImage.src, zoomImage.alt, createZoomImageMove]);
+    const handleImageLoad = React.useCallback(() => {
+        const image = imgRef.current
+        if (!image) return
 
-    const handleImageLoad = async () => {
-        if (imgRef.current) {
-            setImageDimensions({
-                width: imgRef.current.naturalWidth,
-                height: imgRef.current.naturalHeight,
-            });
-            await delay(delayTimer ?? 1600);  //delay for better user experience
-            setIsImageLoaded(true);
-        }
-    };
+        setImageDimensions({
+            width: image.naturalWidth,
+            height: image.naturalHeight,
+        })
 
+        clearRevealTimer()
+        const sourceAtLoad = mainImage.src
+        const revealDelay = Number.isFinite(delayTimer) ? Math.max(0, delayTimer) : 1600
+        revealTimerRef.current = setTimeout(() => {
+            setLoadedSrc(sourceAtLoad)
+            revealTimerRef.current = null
+        }, revealDelay)
+    }, [clearRevealTimer, delayTimer, mainImage.src])
+
+    const handleImageError = React.useCallback(() => {
+        clearRevealTimer()
+        setLoadedSrc(mainImage.src)
+    }, [clearRevealTimer, mainImage.src])
+
+    const resolvedWidth = mainImage.width ?? (imageDimension.width || undefined)
+    const resolvedHeight = mainImage.height ?? undefined
 
     return (
         <>
-            {!isImageLoaded && (loadingIndicator ??
+            {!isImageLoaded && (loadingIndicator ?? (
                 <EasySkeleton
-                    height={props.mainImage.height ?? 450}
-                    width={props.mainImage.width ?? 450}
+                    height={mainImage.height ?? 450}
+                    width={mainImage.width ?? 450}
                 />
-            )}
-            <div ref={imageMoveContainerRef} className="EasyImageZoomOnMoveContainer"
+            ))}
+            <div
+                ref={imageMoveContainerRef}
+                className={joinClassNames("EasyImageZoomOnMoveContainer", className)}
                 style={{
-                    position: "relative", maxHeight: mainImage.height ?? imageDimension?.height ?? "auto",
-                    maxWidth: mainImage.width ?? imageDimension?.width, overflow: "hidden",
+                    position: "relative",
+                    width: resolvedWidth,
+                    height: resolvedHeight,
+                    maxWidth: "100%",
+                    overflow: "hidden",
                     cursor: "crosshair",
                     display: isImageLoaded ? "block" : "none",
+                    ...style,
                 }}
             >
-                <img className='EasyImageZoomOnMoveImage'
-                    onLoad={handleImageLoad} ref={imgRef as React.RefObject<HTMLImageElement>}
-                    style={{ width: "full", height: "full" }}
-                    alt={mainImage.alt ?? "Large Pic"} src={mainImage.src} />
+                <img
+                    className={joinClassNames("EasyImageZoomOnMoveImage", imageClassName)}
+                    onLoad={handleImageLoad}
+                    onError={handleImageError}
+                    ref={imgRef}
+                    style={{
+                        display: "block",
+                        width: "100%",
+                        height: resolvedHeight ? "100%" : "auto",
+                        objectFit: "contain",
+                        ...imageStyle,
+                    }}
+                    alt={mainImage.alt ?? ""}
+                    src={mainImage.src}
+                />
             </div>
-
         </>
-
     )
-}
+})
+
+EasyZoomOnMove.displayName = "EasyZoomOnMove"
 
 export default EasyZoomOnMove
