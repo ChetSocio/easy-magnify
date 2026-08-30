@@ -71,3 +71,9 @@ jobs:
           npm install --no-audit --no-fund react@^19 react-dom@^19 @types/react@^19 @types/react-dom@^19
           npm install --no-audit --no-fund "/tmp/easy-magnify-pack/${TARBALL}"
           npm ls easy-magnify react react-dom
+      - name: Verify client directive
+        shell: bash
+        run: |
+          set -euo pipefail
+          head -n 5 dist/index.mjs | grep -F '"use client";'
+          head -n 5 dist/index.js | grep -F '"use client";'
