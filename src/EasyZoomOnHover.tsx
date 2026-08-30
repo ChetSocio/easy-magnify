@@ -87,14 +87,7 @@ const EasyZoomOnHover = React.forwardRef<HTMLDivElement, EasyZoomOnHoverProps>(f
     const [loadedSrc, setLoadedSrc] = React.useState<string | null>(null)
     const isImageLoaded = loadedSrc === mainImage.src
 
-    const setContainerRef = React.useCallback((node: HTMLDivElement | null) => {
-        imageHoverContainerRef.current = node
-        if (typeof forwardedRef === "function") {
-            forwardedRef(node)
-        } else if (forwardedRef) {
-            forwardedRef.current = node
-        }
-    }, [forwardedRef])
+    React.useImperativeHandle(forwardedRef, () => imageHoverContainerRef.current as HTMLDivElement, [])
 
     const clearRevealTimer = React.useCallback(() => {
         if (revealTimerRef.current) {
@@ -180,7 +173,7 @@ const EasyZoomOnHover = React.forwardRef<HTMLDivElement, EasyZoomOnHoverProps>(f
                 />
             ))}
             <div
-                ref={setContainerRef}
+                ref={imageHoverContainerRef}
                 className={joinClassNames("EasyZoomImageHoverMainContainer", className)}
                 style={{
                     position: "relative",

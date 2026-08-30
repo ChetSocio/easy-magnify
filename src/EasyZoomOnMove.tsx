@@ -69,14 +69,7 @@ const EasyZoomOnMove = React.forwardRef<HTMLDivElement, EasyZoomOnMoveProps>(fun
     const imgRef = React.useRef<HTMLImageElement>(null)
     const revealTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
-    const setContainerRef = React.useCallback((node: HTMLDivElement | null) => {
-        imageMoveContainerRef.current = node
-        if (typeof forwardedRef === "function") {
-            forwardedRef(node)
-        } else if (forwardedRef) {
-            forwardedRef.current = node
-        }
-    }, [forwardedRef])
+    React.useImperativeHandle(forwardedRef, () => imageMoveContainerRef.current as HTMLDivElement, [])
 
     const clearRevealTimer = React.useCallback(() => {
         if (revealTimerRef.current) {
@@ -146,7 +139,7 @@ const EasyZoomOnMove = React.forwardRef<HTMLDivElement, EasyZoomOnMoveProps>(fun
                 />
             ))}
             <div
-                ref={setContainerRef}
+                ref={imageMoveContainerRef}
                 className={joinClassNames("EasyImageZoomOnMoveContainer", className)}
                 style={{
                     position: "relative",
