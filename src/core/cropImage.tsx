@@ -6,56 +6,71 @@ export type CropImageArg = {
     rotation?: number
 }
 
+function assertPositiveFinite(value: number, name: string) {
+    if (!Number.isFinite(value) || value <= 0) {
+        throw new RangeError(`${name} must be a positive finite number`)
+    }
+}
+
+function getCanvasContext(canvas: HTMLCanvasElement) {
+    const context = canvas.getContext("2d")
+    if (!context) {
+        throw new Error("Unable to create a 2D canvas context")
+    }
+    return context
+}
+
 const cropImage = async ({ image, positionX, positionY, currentZoom, rotation = 0 }: CropImageArg) => {
-    const canvas = document.createElement("canvas")
+    assertPositiveFinite(currentZoom, "currentZoom")
+    assertPositiveFinite(image.naturalWidth, "image.naturalWidth")
+    assertPositiveFinite(image.naturalHeight, "image.naturalHeight")
+    assertPositiveFinite(image.clientWidth, "image.clientWidth")
+    assertPositiveFinite(image.clientHeight, "image.clientHeight")
+
     const scale = image.naturalWidth / (image.clientWidth * currentZoom)
-    const normalizedRotation = rotation % 360
-    const croppedImageWidth = image.clientWidth * scale
-    const croppedImageHeight = image.clientHeight * scale
-    canvas.width = croppedImageWidth
-    canvas.height = croppedImageHeight
-    const canvasContext = canvas.getContext("2d") as CanvasRenderingContext2D
+    const cropWidth = Math.max(1, Math.min(image.naturalWidth, Math.round(image.clientWidth * scale)))
+    const cropHeight = Math.max(1, Math.min(image.naturalHeight, Math.round(image.clientHeight * scale)))
+    const maxSourceX = Math.max(0, image.naturalWidth - cropWidth)
+    const maxSourceY = Math.max(0, image.naturalHeight - cropHeight)
+    const sourceX = Math.min(maxSourceX, Math.max(0, -positionX * scale))
+    const sourceY = Math.min(maxSourceY, Math.max(0, -positionY * scale))
 
-    const sx = Math.max(0, Math.abs(positionX) * scale)
-    const sy = Math.max(0, Math.abs(positionY) * scale)
-
-    canvasContext.drawImage(
+    const cropCanvas = document.createElement("canvas")
+    cropCanvas.width = cropWidth
+    cropCanvas.height = cropHeight
+    const cropContext = getCanvasContext(cropCanvas)
+    cropContext.drawImage(
         image,
-        sx,
-        sy,
-        croppedImageWidth,
-        croppedImageHeight,
+        sourceX,
+        sourceY,
+        cropWidth,
+        cropHeight,
         0,
         0,
-        croppedImageWidth,
-        croppedImageHeight,
+        cropWidth,
+        cropHeight,
     )
 
-    const originalImage = new Image()
-    originalImage.src = canvas.toDataURL()
-
-    await new Promise((resolve) => setTimeout(resolve, 0))
-
-    const rotatedCanvas = document.createElement("canvas") as HTMLCanvasElement
-    const rotatedCanvasContext = rotatedCanvas.getContext("2d") as CanvasRenderingContext2D
-
-    if (normalizedRotation === 90 || normalizedRotation === 270) {
-        rotatedCanvas.width = originalImage.naturalHeight
-        rotatedCanvas.height = originalImage.naturalWidth
-    } else {
-        rotatedCanvas.width = originalImage.naturalWidth
-        rotatedCanvas.height = originalImage.naturalHeight
+    const normalizedRotation = ((rotation % 360) + 360) % 360
+    if (normalizedRotation === 0) {
+        return cropCanvas.toDataURL()
     }
 
-    rotatedCanvasContext.clearRect(0, 0, canvas.width, canvas.height)
-    if (normalizedRotation === 90 || normalizedRotation === 270) {
-        rotatedCanvasContext.translate(originalImage.height / 2, originalImage.width / 2)
-    } else {
-        rotatedCanvasContext.translate(originalImage.width / 2, originalImage.height / 2)
-    }
-    rotatedCanvasContext.rotate((normalizedRotation * Math.PI) / 180)
-    rotatedCanvasContext.drawImage(originalImage, -originalImage.width / 2, -originalImage.height / 2)
+    const radians = (normalizedRotation * Math.PI) / 180
+    const rawAbsCos = Math.abs(Math.cos(radians))
+    const rawAbsSin = Math.abs(Math.sin(radians))
+    const absCos = rawAbsCos < 1e-10 ? 0 : rawAbsCos
+    const absSin = rawAbsSin < 1e-10 ? 0 : rawAbsSin
+    const rotatedCanvas = document.createElement("canvas")
+    rotatedCanvas.width = Math.max(1, Math.ceil(cropWidth * absCos + cropHeight * absSin))
+    rotatedCanvas.height = Math.max(1, Math.ceil(cropWidth * absSin + cropHeight * absCos))
+
+    const rotatedContext = getCanvasContext(rotatedCanvas)
+    rotatedContext.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2)
+    rotatedContext.rotate(radians)
+    rotatedContext.drawImage(cropCanvas, -cropWidth / 2, -cropHeight / 2)
 
     return rotatedCanvas.toDataURL()
 }
-export default cropImage;
+
+export default cropImage

@@ -1,6 +1,6 @@
 import { createStore } from "../hooks"
 import { imageLoader } from "./imageLoader"
-import { disableScroll, enableScroll, getSourceImage } from "../core"
+import { disableScroll, enableScroll, getSourceImage } from "./clamp"
 
 export type ZoomedImgStatus = "idle" | "loading" | "loaded" | "error"
 
@@ -10,6 +10,7 @@ export type ZoomImageMoveOptions = {
     disableScrollLock?: boolean
     zoomImageProps?: {
         alt?: string
+        className?: string
     }
 }
 
@@ -17,10 +18,14 @@ export type ZoomImageMoveState = {
     zoomedImgStatus: ZoomedImgStatus
 }
 
+function positiveNumberOr(value: number | undefined, fallback: number) {
+    return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : fallback
+}
+
 export function createZoomImageMove(container: HTMLElement, options: ZoomImageMoveOptions = {}) {
     const sourceImgElement = getSourceImage(container)
     const finalOptions: Omit<Required<ZoomImageMoveOptions>, "zoomImageProps"> = {
-        zoomFactor: options.zoomFactor ?? 4,
+        zoomFactor: positiveNumberOr(options.zoomFactor, 4),
         zoomImageSource: options.zoomImageSource ?? sourceImgElement.src,
         disableScrollLock: options.disableScrollLock ?? false,
     }
@@ -32,11 +37,31 @@ export function createZoomImageMove(container: HTMLElement, options: ZoomImageMo
     })
 
     const zoomedImg = container.appendChild(document.createElement("img"))
-    zoomedImg.alt = options.zoomImageProps?.alt || ""
+    zoomedImg.alt = options.zoomImageProps?.alt ?? ""
+    zoomedImg.className = options.zoomImageProps?.className ?? ""
+    zoomedImg.draggable = false
     zoomedImg.style.maxWidth = "none"
     zoomedImg.style.position = "absolute"
     zoomedImg.style.top = "0"
     zoomedImg.style.left = "0"
+    zoomedImg.style.pointerEvents = "none"
+    zoomedImg.style.display = "none"
+
+    let scrollLocked = false
+
+    function lockPageScroll() {
+        if (!disableScrollLock && !scrollLocked) {
+            disableScroll()
+            scrollLocked = true
+        }
+    }
+
+    function unlockPageScroll() {
+        if (scrollLocked) {
+            enableScroll()
+            scrollLocked = false
+        }
+    }
 
     function handlePointerEnter(event: PointerEvent) {
         zoomedImg.style.display = "block"
@@ -45,10 +70,8 @@ export function createZoomImageMove(container: HTMLElement, options: ZoomImageMo
         zoomedImg.style.width = `${zoomedImgWidth}px`
         zoomedImg.style.height = `${zoomedImgHeight}px`
         imageLoader.createZoomImage(zoomedImg, zoomImageSource, store)
-
         processZoom(event)
-
-        if (!disableScrollLock) disableScroll()
+        lockPageScroll()
     }
 
     function handlePointerMove(event: PointerEvent) {
@@ -58,7 +81,7 @@ export function createZoomImageMove(container: HTMLElement, options: ZoomImageMo
     function handlePointerLeave() {
         zoomedImg.style.display = "none"
         zoomedImg.style.transform = "none"
-        if (!disableScrollLock) enableScroll()
+        unlockPageScroll()
     }
 
     const calculatePositionX = (newPositionX: number) => {
@@ -96,9 +119,8 @@ export function createZoomImageMove(container: HTMLElement, options: ZoomImageMo
     return {
         cleanup: () => {
             controller.abort()
+            unlockPageScroll()
             container.contains(zoomedImg) && container.removeChild(zoomedImg)
-            container.style.width = "100%"
-            container.style.height = "100%"
             store.cleanup()
         },
         subscribe: store.subscribe,
