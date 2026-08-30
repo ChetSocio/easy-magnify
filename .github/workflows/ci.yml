@@ -39,3 +39,35 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  react-19-consumer:
+    name: React 19 consumer
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Verify clean React 19 consumer install
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/easy-magnify-pack /tmp/easy-magnify-react19
+          TARBALL="$(npm pack --silent --pack-destination /tmp/easy-magnify-pack)"
+          cd /tmp/easy-magnify-react19
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund react@^19 react-dom@^19 @types/react@^19 @types/react-dom@^19
+          npm install --no-audit --no-fund "/tmp/easy-magnify-pack/${TARBALL}"
+          npm ls easy-magnify react react-dom
