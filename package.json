@@ -54,11 +54,13 @@
     "analyze": "npm run stats && webpack-bundle-analyzer stats.json",
     "build-umd": "webpack --mode=production",
     "build-cjs": "cross-env BABEL_ENV=cjs babel src --out-dir dist",
-    "build-es": "babel ./src --extensions .ts,.tsx  --out-dir dist/es",
+    "build-es": "babel ./src --extensions .ts,.tsx --out-dir dist/es",
     "build": "rimraf dist && tsup",
     "build-watch": "cross-env BABEL_ENV=cjs babel --watch src --out-dir dist",
     "stats": "webpack --profile --json > stats.json",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "test": "jest --runInBand",
+    "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -o docs",
     "serve-storybook": "serve storybook-static",
@@ -117,8 +119,8 @@
     "webpack-cli": "^5.1.4"
   },
   "peerDependencies": {
-    "@types/react": "^17.0.0 || ^18.0.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "@types/react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   }
 }
